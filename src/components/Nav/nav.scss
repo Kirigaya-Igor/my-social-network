@@ -1,0 +1,15 @@
+.app-nav {
+  grid-area: n;
+  background-color: deeppink;
+  padding: 20px;
+
+  .item {
+    color: black;
+    text-decoration: none;
+  }
+
+  .item.active {
+    color: white;
+  }
+
+}
