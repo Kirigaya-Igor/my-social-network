@@ -2,8 +2,9 @@ import React from 'react';
 import './dialogs.scss';
 import DialogItem from "./DialogItem";
 import Message from "./Message";
+import {Redirect} from "react-router-dom";
 
-const Dialogs = ({state, sendMessage, updateNewMessageBody}) => {
+const Dialogs = ({state, isAuth, sendMessage, updateNewMessageBody}) => {
 
     const onSendMessage = () => {
         sendMessage();
