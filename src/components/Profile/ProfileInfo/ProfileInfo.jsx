@@ -1,8 +1,9 @@
 import React from 'react';
 import './profileInfo.scss';
 import Loader from "../../common/Loader";
+import ProfileStatus from "../ProfileStatus";
 
-const ProfileInfo = ({profile}) => {
+const ProfileInfo = ({profile, status, updateStatus}) => {
 
     if(!profile){
         return <Loader/>
@@ -15,6 +16,7 @@ const ProfileInfo = ({profile}) => {
             </div>
             <div className='description-block'>
                 <img src={profile.photos.large}/>
+                <ProfileStatus status={status} updateStatus={updateStatus}/>
                 <div>{profile.fullName}</div>
                 <div>{profile.aboutMe}</div>
                 <div>{profile.contacts.vk}</div>
