@@ -1,0 +1,22 @@
+.formControl {
+
+  textarea:focus {
+    outline: none;
+  }
+
+  .error{
+
+
+    input {
+      border: 2px red solid;
+    }
+
+    textarea {
+      border: 2px red solid;
+    }
+
+    span {
+      color: red;
+    }
+  }
+}
