@@ -8,6 +8,14 @@ import {
 import Users from "./Users";
 import Loader from "../common/Loader";
 import {compose} from "redux";
+import {
+    getAllUsers,
+    getCurrentPage,
+    getIsFetching,
+    getIsFollowing,
+    getPageSize,
+    getUsersData
+} from "../../redux/userSelectors";
 
 class UsersContainer extends Component{
     componentDidMount() {
@@ -32,14 +40,25 @@ class UsersContainer extends Component{
     }
 }
 
+// const mapStateToProps = (state) => {
+//     return {
+//         usersData: state.usersPage.usersData,
+//         pageSize: state.usersPage.pageSize,
+//         allUsers: state.usersPage.allUsers,
+//         currentPage: state.usersPage.currentPage,
+//         isFetching: state.usersPage.isFetching,
+//         isFollowing: state.usersPage.isFollowing
+//     }
+// }
+
 const mapStateToProps = (state) => {
     return {
-        usersData: state.usersPage.usersData,
-        pageSize: state.usersPage.pageSize,
-        allUsers: state.usersPage.allUsers,
-        currentPage: state.usersPage.currentPage,
-        isFetching: state.usersPage.isFetching,
-        isFollowing: state.usersPage.isFollowing
+        usersData: getUsersData(state),
+        pageSize: getPageSize(state),
+        allUsers: getAllUsers(state),
+        currentPage: getCurrentPage(state),
+        isFetching: getIsFetching(state),
+        isFollowing: getIsFollowing(state)
     }
 }
 
