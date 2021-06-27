@@ -4,6 +4,7 @@ export const getUsersData = (state) => {
     return state.usersPage.usersData
 }
 
+// SELECTOR WITH RESELECT
 // export const getUsersDataSuper = createSelector(getUsersData, (users) => {
 //     return users.filter(u => true)
 // })

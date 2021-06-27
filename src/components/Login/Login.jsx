@@ -9,10 +9,10 @@ import './login.scss';
 
 const maxLength20 = maxLengthCreator(20);
 
-const LoginForm = (props) => {
+const LoginForm = ({handleSubmit, error}) => {
     return (
-        <form onSubmit={props.handleSubmit}>
-            {props.error && <div className='someError'><span>{props.error}</span></div>}
+        <form onSubmit={handleSubmit}>
+            {error && <div className='someError'><span>{error}</span></div>}
             <div>
                 <Field placeholder='Email' name='email' component={Input}
                        validate={[required]}/>
@@ -37,12 +37,12 @@ const LoginReduxForm = reduxForm({
     form: 'login'
 })(LoginForm)
 
-const Login = (props) => {
+const Login = ({login, isAuth}) => {
     const onSubmit = (formData) => {
-        props.login(formData.email, formData.password, formData.rememberMe)
+        login(formData.email, formData.password, formData.rememberMe)
     }
 
-    if(props.isAuth){
+    if(isAuth){
         return <Redirect to={'/profile'}/>
     }
 

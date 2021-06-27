@@ -1,6 +1,6 @@
 import React from "react";
 import './App.scss';
-import {Route, Switch, Redirect, withRouter} from 'react-router-dom';
+import {Route, Switch, withRouter} from 'react-router-dom';
 import Nav from "./components/Nav";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";

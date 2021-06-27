@@ -3,6 +3,11 @@ import {profileAPI} from "../api/api";
 const ADD_POST = 'ADD_POST';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const SET_USER_STATUS = 'SET_USER_STATUS';
+const DELETE_POST = 'DELETE_POST';
+
+export const deletePost = (postId) => {
+    return {type: DELETE_POST, postId}
+}
 
 export const addPostActionCreator = (newPostText) => {
     return {type: ADD_POST, newPostText}
@@ -17,28 +22,29 @@ export const setStatus = (status) => {
 }
 
 export const getUserProfile = (userId) => {
-    return (dispatch) => {
-        profileAPI.getProfile(userId).then(data => {
-            dispatch(setProfile(data));
-        })
+    return async (dispatch) => {
+        const data = await profileAPI.getProfile(userId);
+
+        dispatch(setProfile(data));
+
     }
 }
 
 export const getUserStatus = (userId) => {
-    return (dispatch) => {
-        profileAPI.getStatus(userId).then(data => {
-            dispatch(setStatus(data));
-        })
+    return async (dispatch) => {
+        const data = await profileAPI.getStatus(userId);
+
+        dispatch(setStatus(data));
     }
 }
 
 export const updateUserStatus = (status) => {
-    return (dispatch) => {
-        profileAPI.updateStatus(status).then(data => {
-            if (data.resultCode === 0) {
-                dispatch(setStatus(status));
-            }
-        })
+    return async (dispatch) => {
+        const data = await profileAPI.updateStatus(status);
+
+        if (data.resultCode === 0) {
+            dispatch(setStatus(status));
+        }
     }
 }
 
@@ -61,7 +67,7 @@ const profileReducer = (state = initialState, action) => {
             };
             return {
                 ...state,
-                postsData: [...state.postsData, newPost],
+                postsData: [...state.postsData, newPost]
             }
 
         }
@@ -75,6 +81,12 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 status: action.status
+            }
+        }
+        case DELETE_POST: {
+            return {
+                ...state,
+                postsData: state.postsData.filter(p => p.id != action.postId)
             }
         }
         default:
