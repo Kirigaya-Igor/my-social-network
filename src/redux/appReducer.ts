@@ -2,12 +2,16 @@ import {authCheck} from "./authReducer";
 
 const SET_INITIALIZED = 'SET_INITIALIZED';
 
-export const setInitialized = () => {
+type SetInitializedAC = {
+    type: typeof SET_INITIALIZED
+}
+
+export const setInitialized = (): SetInitializedAC => {
     return {type: SET_INITIALIZED}
 }
 
 export const initializeApp = () => {
-    return async (dispatch) => {
+    return async (dispatch: any) => {
 
         await dispatch(authCheck());
 
@@ -15,11 +19,15 @@ export const initializeApp = () => {
     }
 }
 
-const initialState = {
+type InitialStateType = {
+    initialized: boolean
+}
+
+const initialState: InitialStateType = {
     initialized: false
 }
 
-const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
         case SET_INITIALIZED: {
             return {

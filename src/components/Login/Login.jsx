@@ -1,6 +1,6 @@
 import React from "react";
 import {Field, reduxForm} from "redux-form";
-import {Input} from "../common/FormsControls/FormsControls";
+import {createField, Input} from "../common/FormsControls/FormsControls";
 import {maxLengthCreator, required} from "../../utils/validators/validators";
 import {connect} from "react-redux";
 import {login} from "../../redux/authReducer";
@@ -9,7 +9,8 @@ import './login.scss';
 
 const maxLength20 = maxLengthCreator(20);
 
-const LoginForm = ({handleSubmit, error}) => {
+const LoginForm = ({handleSubmit, error, captchaUrl}) => {
+    debugger
     return (
         <form onSubmit={handleSubmit}>
             {error && <div className='someError'><span>{error}</span></div>}
@@ -25,6 +26,11 @@ const LoginForm = ({handleSubmit, error}) => {
                 <Field component={Input} name='rememberMe' type='checkbox'
                        validate={[required]}/> remember me
             </div>
+
+            {captchaUrl && <img src={captchaUrl}/>}
+            {captchaUrl && createField('symbols from image', 'captcha',
+                [required], Input, {})}
+
             <div>
                 <button>Login</button>
             </div>
@@ -37,9 +43,9 @@ const LoginReduxForm = reduxForm({
     form: 'login'
 })(LoginForm)
 
-const Login = ({login, isAuth}) => {
+const Login = ({login, isAuth, captchaUrl}) => {
     const onSubmit = (formData) => {
-        login(formData.email, formData.password, formData.rememberMe)
+        login(formData.email, formData.password, formData.rememberMe, formData.captcha)
     }
 
     if(isAuth){
@@ -50,14 +56,15 @@ const Login = ({login, isAuth}) => {
         <div>
             <h1>LOGIN</h1>
 
-            <LoginReduxForm onSubmit={onSubmit}/>
+            <LoginReduxForm onSubmit={onSubmit} captchaUrl={captchaUrl}/>
         </div>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.auth.isAuth
+        isAuth: state.auth.isAuth,
+        captchaUrl: state.auth.captchaUrl
     }
 }
 
