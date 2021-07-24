@@ -1,76 +1,66 @@
-import {authAPI, securityAPI} from "../api/api";
+import {ResultCodeEnum, ResultCodeForCaptchaEnum} from "../api/api";
 import {stopSubmit} from "redux-form";
+import {BaseThunkType, InferActionsType} from "./store";
+import {authAPI} from "../api/authAPI";
+import {securityAPI} from "../api/securityAPI";
 
-const SET_USER_DATA = 'SET_USER_DATA';
-const GET_CAPTCHA_URL = 'GET_CAPTCHA_URL';
+type ActionTypes = InferActionsType<typeof actions>
 
-type setAuthUserDataAcPayloadType = {
-    userId: number | null,
-    email: string | null,
-    login: string | null,
-    isAuth: boolean
+export const actions = {
+    setAuthUserData: (userId: number | null, email: string | null, login: string | null, isAuth: boolean) => {
+        return {type: 'SET_USER_DATA', payload: {userId, email, login, isAuth}} as const
+    },
+    getCaptchaUrlSuccess: (captchaUrl: string) => {
+        return {type: 'GET_CAPTCHA_URL', payload: {captchaUrl}} as const
+    }
 }
 
-type setAuthUserDataAcType = {
-    type: typeof SET_USER_DATA,
-    payload: setAuthUserDataAcPayloadType
-}
+type ThunkType = BaseThunkType<ActionTypes>
 
-type getCaptchaUrlSuccessAcType = {
-    type: typeof GET_CAPTCHA_URL,
-    payload: {captchaUrl: string}
-}
-
-export const setAuthUserData = (userId: number | null, email: string | null, login: string | null, isAuth: boolean): setAuthUserDataAcType => {
-    return {type: SET_USER_DATA, payload: {userId, email, login, isAuth}}
-}
-
-export const getCaptchaUrlSuccess = (captchaUrl: string): getCaptchaUrlSuccessAcType => {
-    return {type: GET_CAPTCHA_URL, payload: {captchaUrl}}
-}
-
-export const authCheck = () => {
-    return async (dispatch: any) => {
+export const authCheck = (): ThunkType => {
+    return async (dispatch) => {
         const data = await authAPI.authMe();
 
-        if (data.resultCode === 0) {
+        if (data.resultCode === ResultCodeEnum.Success) {
             const {id, email, login} = data.data;
-            dispatch(setAuthUserData(id, email, login, true));
+            dispatch(actions.setAuthUserData(id, email, login, true));
         }
     }
 }
 
-export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => {
-    return async (dispatch: any) => {
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string): ThunkType => {
+    return async (dispatch) => {
         const data = await authAPI.login(email, password, rememberMe, captcha);
 
-        if (data.resultCode === 0) {
+        if (data.resultCode === ResultCodeEnum.Success) {
             dispatch(authCheck())
         } else {
-            if(data.resultCode === 10){
+            if(data.resultCode === ResultCodeForCaptchaEnum.CaptchaIsRequired){
                 dispatch(getCaptchaUrl());
             }
             const message = data.messages.length > 0 ? data.messages[0] : 'Some error';
+
+            // @ts-ignore
             dispatch(stopSubmit('login', {_error: message}));
         }
     }
 }
 
-export const logout = () => {
-    return async (dispatch: any) => {
+export const logout = (): ThunkType => {
+    return async (dispatch) => {
         const data: any = authAPI.logout();
 
         if (data.resultCode === 0) {
-            dispatch(setAuthUserData(null, null, null, false));
+            dispatch(actions.setAuthUserData(null, null, null, false));
         }
     }
 }
 
-export const getCaptchaUrl = () => {
-    return async (dispatch: any) => {
+export const getCaptchaUrl = (): ThunkType => {
+    return async (dispatch) => {
         const data = await securityAPI.getCaptchaUrl();
         const captchaUrl = data.url;
-        dispatch(getCaptchaUrlSuccess(captchaUrl));
+        dispatch(actions.getCaptchaUrlSuccess(captchaUrl));
     }
 }
 
@@ -84,16 +74,15 @@ const initialState = {
 
 type InitialStateType = typeof initialState;
 
-const authReducer = (state = initialState, action: any): InitialStateType => {
+const authReducer = (state = initialState, action: ActionTypes): InitialStateType => {
     switch (action.type) {
-        case SET_USER_DATA: {
+        case 'SET_USER_DATA': {
             return {
                 ...state,
                 ...action.payload
             }
-
         }
-        case GET_CAPTCHA_URL: {
+        case 'GET_CAPTCHA_URL': {
             return {
                 ...state,
                 ...action.payload

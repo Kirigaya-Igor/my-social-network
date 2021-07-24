@@ -1,43 +1,40 @@
-import {authCheck} from "./authReducer";
+import {authCheck} from "./authReducer"
+import {BaseThunkType, InferActionsType} from "./store";
 
-const SET_INITIALIZED = 'SET_INITIALIZED';
+type ActionTypes = InferActionsType<typeof actions>
 
-type SetInitializedAC = {
-    type: typeof SET_INITIALIZED
+export const actions = {
+    setInitialized: () => {return {type: 'SET_INITIALIZED'} as const}
 }
 
-export const setInitialized = (): SetInitializedAC => {
-    return {type: SET_INITIALIZED}
-}
+type ThunkType = BaseThunkType<ActionTypes>
 
-export const initializeApp = () => {
-    return async (dispatch: any) => {
+export const initializeApp = (): ThunkType => {
+    return async (dispatch) => {
 
-        await dispatch(authCheck());
+        await dispatch(authCheck())
 
-        dispatch(setInitialized());
+        dispatch(actions.setInitialized())
     }
 }
 
-type InitialStateType = {
-    initialized: boolean
-}
-
-const initialState: InitialStateType = {
+const initialState = {
     initialized: false
 }
 
-const appReducer = (state = initialState, action: any): InitialStateType => {
+type InitialStateType = typeof initialState
+
+const appReducer = (state = initialState, action: ActionTypes): InitialStateType => {
     switch (action.type) {
-        case SET_INITIALIZED: {
+        case 'SET_INITIALIZED': {
             return {
                 ...state,
                 initialized: true
             }
         }
         default:
-            return state;
+            return state
     }
 }
 
-export default appReducer;
+export default appReducer

@@ -1,12 +1,11 @@
-const SEND_MESSAGE = 'SEND_MESSAGE';
+import {InferActionsType} from "./store";
 
-type sendMessageCreatorAcType = {
-    type: typeof SEND_MESSAGE,
-    newMessageText: string
-}
+type ActionTypes = InferActionsType<typeof actions>
 
-export const sendMessageCreator = (newMessageText: string): sendMessageCreatorAcType => {
-    return {type: SEND_MESSAGE, newMessageText}
+export const actions = {
+    sendMessage: (newMessageText: string) => {
+        return {type: 'SEND_MESSAGE', newMessageText} as const
+    }
 }
 
 const initialState = {
@@ -21,11 +20,11 @@ const initialState = {
 
 }
 
-type InitialStateType = typeof initialState;
+export type InitialStateType = typeof initialState;
 
-const dialogsReducer = (state = initialState, action: any): InitialStateType => {
+const dialogsReducer = (state = initialState, action: ActionTypes): InitialStateType => {
     switch (action.type) {
-        case SEND_MESSAGE:
+        case 'SEND_MESSAGE':
             const body = action.newMessageText;
             return {
                 ...state,
