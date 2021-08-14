@@ -31,7 +31,6 @@ export type profileType = {
 export type usersDataType = {
     name: string
     id: number
-    uniqueUrlName: string | null
     photos: photosType
     status: string | null
     followed: boolean

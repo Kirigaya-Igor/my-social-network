@@ -1,8 +1,9 @@
 import React from "react";
 import './App.scss';
+import 'antd/dist/antd.css'
 import {BrowserRouter, Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import Nav from "./components/Nav";
-import UsersContainer from "./components/Users/UsersContainer";
+import UsersPage from "./components/Users/UsersContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login";
@@ -11,6 +12,11 @@ import {compose} from "redux";
 import {initializeApp} from "./redux/appReducer";
 import Loader from "./components/common/Loader";
 import store, {appStateType} from "./redux/store";
+import { Layout, Menu, Breadcrumb } from 'antd';
+import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+
+const { SubMenu } = Menu;
+const { Header, Content, Footer, Sider } = Layout;
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
@@ -36,12 +42,14 @@ class App extends React.Component<MapPropsType & DispatchPropsType> {
     }
 
     render() {
-
         if (!this.props.initialized) {
             return <Loader/>
         }
 
         return (
+
+
+
             <div className='app-wrapper'>
                 <HeaderContainer/>
                 <Nav/>
@@ -53,10 +61,10 @@ class App extends React.Component<MapPropsType & DispatchPropsType> {
                                 <DialogsContainer/>
                             </React.Suspense>
                         }/>
-                        <Route path='/users' render={() => <UsersContainer/>}/>
+                        <Route path='/users' render={() => <UsersPage/>}/>
                         <Route path='/login' render={() => <Login/>}/>
                         <Redirect from="/" to="/profile" />
-                        <Redirect to={'/profile'}/>
+                        <Redirect to={'/profile'}/>*/}
                     </Switch>
                 </div>
             </div>
