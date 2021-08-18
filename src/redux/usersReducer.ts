@@ -139,7 +139,7 @@ const usersReducer = (state = initialState, action: ActionTypes): InitialStateTy
                 ...state,
                 isFollowing: action.isFollowing
                     ? [...state.isFollowing, action.userId]
-                    : state.isFollowing.filter(id => id != action.userId)
+                    : state.isFollowing.filter(id => id !== action.userId)
             }
         case 'SET_FILTER':
             return {
